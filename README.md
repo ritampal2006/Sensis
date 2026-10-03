@@ -38,16 +38,16 @@ The final result is shown as a conversation trace so that a user can see exactly
                  ┌─────────────────────────┐
                  │      User / Analyst     │
                  │                         │
-                 │  Paste Conversation    │
-                 │  Select Preset / Logs  │
+                 │  Paste Conversation     │
+                 │  Select Preset / Logs   │
                  └────────────┬────────────┘
                               │
                               ▼
                  ┌─────────────────────────┐
                  │     Transcript Parser   │
                  │                         │
-                 │ Speaker: Message       │
-                 │ Turn Separation        │
+                 │ Speaker: Message        │
+                 │ Turn Separation         │
                  └────────────┬────────────┘
                               │
                               ▼
@@ -73,15 +73,15 @@ The final result is shown as a conversation trace so that a user can see exactly
                               │
                     ┌─────────┴─────────┐
                     ▼                   ▼
-          ┌─────────────────┐   ┌─────────────────┐
-          │  Tone / Sentiment│   │ Friction Rules │
+          ┌─────────────────┐    ┌─────────────────┐
+          │ Tone / Sentiment │   │ Friction Rules  │
           │     Analysis     │   │                 │
-          │                 │   │ Unanswered Q    │
+          │                  │   │ Unanswered Q    │
           │ VADER / Affective│   │ Confusion Loop  │
           │ Model            │   │ Context Break   │
-          └────────┬────────┘   └────────┬────────┘
-                   │                     │
-                   └──────────┬──────────┘
+          └────────┬────────┘    └────────┬────────┘
+                   │                      │
+                   └──────────┬────────── ┘
                               ▼
                  ┌─────────────────────────┐
                  │    Diagnostic Engine    │
@@ -98,5 +98,27 @@ The final result is shown as a conversation trace so that a user can see exactly
                  │ • Friction Markers      │
                  │ • Conversation Flow     │
                  │ • Turn-by-Turn Trace    │
-                 │ • Audit Logs             │
+                 │ • Audit Logs            │
                  └─────────────────────────┘
+## Project Structure
+sensis/
+│
+├── frontend/
+│   ├── components/
+│   ├── pages/
+│   ├── styles/
+│   └── utils/
+│
+├── analyzer/
+│   ├── parser/
+│   ├── intent/
+│   ├── sentiment/
+│   ├── state_machine/
+│   └── gap_detection/
+│
+├── data/
+│   └── sample_transcripts/
+│
+├── public/
+│
+└── README.md
