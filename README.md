@@ -1,41 +1,102 @@
-# CodeMix India 55k (V3)
+# Sensis — Conversation Gap & Friction Analyzer
 
-A high-entropy,A high-diversity synthetic Hinglish dataset designed for benchmarking, sentiment analysis, robustness evaluation, and representation learning, designed for research in code-mixed NLP. 
+Sensis is a conversation analysis tool that looks at multi-turn dialogues and finds places where the conversation starts to break down.
 
-This dataset contains 55,000 synthetic, highly diverse code-mixed sentences designed for robustness evaluation, sentiment analysis, and representation learning. It has been rigorously audited and optimized to meet the standards of top-tier NLP venues (ACL, EMNLP, NeurIPS).
+It focuses on three things:
 
-## Features
-- **Total Rows**: 55,000
-- **Primary Languages**: Hindi-English (Code-Mixed)
-- **Label Types**: Sentiment, Intent, Emotion, Domain
-- **Diversity Metrics**: Shannon Entropy (5.48), Type-Token Ratio (0.0028)
-- **Advanced Structures**: Includes multi-turn conversations, long-context narratives, and adversarial sarcasm.
+- Unanswered questions
+- Repeated clarification loops
+- Changes in tone or frustration
 
-## Documentation
-Please refer to the detailed documentation for comprehensive information:
-- [Dataset Card](DATASET_CARD.md): Complete Hugging Face style dataset overview.
-- [Data Dictionary](DATA_DICTIONARY.md): Column definitions and feature engineering formulas.
-- [Methodology](METHODOLOGY.md): Details on the Probabilistic Context-Free Grammar (PCFG) generative pipeline.
-- [Validation](VALIDATION.md): Objective diversity metrics and leakage validation.
-- [Changelog](CHANGELOG.md): Version history.
+The idea is simple: instead of only looking at individual messages, Sensis looks at how messages connect with each other across a conversation.
 
-## Quickstart
+## Live Demo
 
-```python
-import pandas as pd
+**Try Sensis:**  
+https://sensis-weld.vercel.app/
 
-# Load the dataset
-df = pd.read_csv("codemix_india_55k_cleaned_v3.csv")
+---
 
-# View class balance
-print(df['sentiment_label'].value_counts())
+## What Sensis Does
 
-# View Code-Mixing Realism
-print(df[df['code_mixing_index'] > 0].shape[0] / len(df))
-```
+Sensis takes a conversation transcript and analyzes it turn by turn.
 
-## Citation
-Please see `CITATION.cff` for citation instructions.
+For each message, it tries to identify:
 
-## License
-Licensed under CC BY 4.0. See `LICENSE` for details.
+- **Dialogue intent** — Question, Statement, Answer, Clarification Request, Acknowledgment
+- **Conversation state** — whether a question was actually addressed
+- **Tone** — positive, neutral, or negative shifts
+- **Friction points** — places where the conversation becomes unclear or repetitive
+
+The final result is shown as a conversation trace so that a user can see exactly where a problem was detected.
+
+---
+
+## System Architecture
+
+```text
+                 ┌─────────────────────────┐
+                 │      User / Analyst     │
+                 │                         │
+                 │  Paste Conversation    │
+                 │  Select Preset / Logs  │
+                 └────────────┬────────────┘
+                              │
+                              ▼
+                 ┌─────────────────────────┐
+                 │     Transcript Parser   │
+                 │                         │
+                 │ Speaker: Message       │
+                 │ Turn Separation        │
+                 └────────────┬────────────┘
+                              │
+                              ▼
+                 ┌─────────────────────────┐
+                 │     Intent Tagger       │
+                 │                         │
+                 │ Question                │
+                 │ Statement               │
+                 │ Answer                  │
+                 │ Clarification Request   │
+                 │ Acknowledgment          │
+                 └────────────┬────────────┘
+                              │
+                              ▼
+                 ┌─────────────────────────┐
+                 │   Conversation State    │
+                 │        Machine          │
+                 │                         │
+                 │ Track pending questions │
+                 │ Match answers to context│
+                 │ Detect repeated loops   │
+                 └────────────┬────────────┘
+                              │
+                    ┌─────────┴─────────┐
+                    ▼                   ▼
+          ┌─────────────────┐   ┌─────────────────┐
+          │  Tone / Sentiment│   │ Friction Rules │
+          │     Analysis     │   │                 │
+          │                 │   │ Unanswered Q    │
+          │ VADER / Affective│   │ Confusion Loop  │
+          │ Model            │   │ Context Break   │
+          └────────┬────────┘   └────────┬────────┘
+                   │                     │
+                   └──────────┬──────────┘
+                              ▼
+                 ┌─────────────────────────┐
+                 │    Diagnostic Engine    │
+                 │                         │
+                 │ Combine intent, state,  │
+                 │ tone and rule signals   │
+                 └────────────┬────────────┘
+                              │
+                              ▼
+                 ┌─────────────────────────┐
+                 │       Sensis UI         │
+                 │                         │
+                 │ • Diagnostic Summary    │
+                 │ • Friction Markers      │
+                 │ • Conversation Flow     │
+                 │ • Turn-by-Turn Trace    │
+                 │ • Audit Logs             │
+                 └─────────────────────────┘
