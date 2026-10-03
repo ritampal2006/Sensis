@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sensis — Conversation Gap & Friction Analyzer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="app-container">
+    <!-- Top Navigation Bar -->
+    <header class="top-nav">
+      <div class="nav-left">
+        <div class="brand-logo" onclick="navigateTo('home')">
+          <div class="brand-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          </div>
+          <span class="brand-name">Sensis</span>
+          <span class="brand-tag">Audit Suite</span>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="nav-center">
+        <div class="nav-pill-group">
+          <button class="nav-pill active" id="tab-home" onclick="navigateTo('home')">
+            Overview
+          </button>
+          <button class="nav-pill" id="tab-dashboard" onclick="navigateTo('dashboard')">
+            Session Logs
+          </button>
+          <button class="nav-pill" id="tab-analyzer" onclick="navigateTo('analyzer')">
+            Transcript Analyzer
+          </button>
+        </div>
+      </nav>
+
+      <!-- Right Profile & Quick Controls -->
+      <div class="nav-right">
+        <!-- Light / Dark Mode Toggle Button -->
+        <button class="icon-btn theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()"
+          title="Switch Light / Dark Mode">
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <button class="icon-btn" title="System Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span class="badge-dot"></span>
+        </button>
+        <button class="icon-btn" title="Model Configuration">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+            </path>
+          </svg>
+        </button>
+        <div class="user-profile-pill">
+          <div class="avatar">
+            <span>SS</span>
+          </div>
+          <div class="user-meta">
+            <span class="user-name">Sensis Studio</span>
+            <span class="user-email">intel@sensis.ai</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Dynamic Container -->
+    <main class="main-content">
+
+      <!-- ================= SCREEN 1: HOME ================= -->
+      <section id="screen-home" class="screen-view active">
+        <!-- Hero Section -->
+        <div class="hero-card">
+          <div class="hero-badge">Conversation Quality & ChatOps Audit</div>
+          <h1 class="hero-title">Multi-Turn Dialogue Friction & Gap Detector</h1>
+          <p class="hero-desc">
+            Analyze multi-speaker conversations to flag unanswered questions, repetitive clarification loops, and
+            negative tone shifts across technical support and team collaboration channels.
+          </p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" onclick="navigateTo('analyzer')">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              Start Dialogue Analysis
+            </button>
+            <button class="btn btn-secondary" onclick="navigateTo('dashboard')">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+              View Conversation Logs
+            </button>
+          </div>
+        </div>
+
+        <!-- Overview Quick Stats -->
+        <div class="stats-row">
+          <div class="stat-card stat-blue">
+            <div class="stat-header">
+              <span>Overall Clarity Index</span>
+              <div class="stat-icon-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value">94.2%</div>
+            <div class="stat-footer">
+              <span class="trend-pill positive">&#8593; 5.4%</span>
+              <span class="stat-note">vs previous 30 days</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span>Dialogues Processed</span>
+              <div class="stat-icon-badge dark">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value">12,840</div>
+            <div class="stat-footer">
+              <span class="trend-pill positive">&#8593; 12.8%</span>
+              <span class="stat-note">Ubuntu & CRM Corpus</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span>Friction Points Caught</span>
+              <div class="stat-icon-badge blue-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value">482</div>
+            <div class="stat-footer">
+              <span class="trend-pill negative">&#8595; 18.2%</span>
+              <span class="stat-note">Confusion & Ignored</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span>Avg Resolution Latency</span>
+              <div class="stat-icon-badge dark">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value">1.8 <small>turns</small></div>
+            <div class="stat-footer">
+              <span class="trend-pill positive">&#8593; 0.4 turns faster</span>
+              <span class="stat-note">Fast question closure</span>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Quick Launch CTA Card -->
+        <div class="cta-banner">
+          <div class="cta-content">
+            <h3>Ready to test a conversation?</h3>
+            <p>Load an Ubuntu support sample or paste an incident transcript directly.</p>
+          </div>
+          <button class="btn btn-primary" onclick="loadSampleAndAnalyze(1)">
+            Run Test Sample #1
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= SCREEN 2: ANALYSIS DASHBOARD ================= -->
+      <section id="screen-dashboard" class="screen-view">
+        <div class="dashboard-header">
+          <div>
+            <h1 class="dash-title">Conversation Audit Logs</h1>
+            <p class="dash-subtitle">Track multi-turn dialogs, unresolved questions, and customer satisfaction friction
+            </p>
+          </div>
+          <div class="dash-controls">
+            <div class="dropdown-pill">
+              <span id="selected-period-label">Last 30 Days</span>
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+            <button class="btn-outline-pill" onclick="exportReport()">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              Export CSV
+            </button>
+            <button class="btn-filter-pill" onclick="toggleFilterDrawer()">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+              </svg>
+              Filter
+            </button>
+          </div>
+        </div>
+
+        <!-- Recent Dialogue Sessions Table -->
+        <div class="table-card">
+          <div class="table-top-bar">
+            <div class="table-header-meta">
+              <h3 class="card-title">Recent Sessions & Escalations</h3>
+              <p class="table-sub-desc">Detailed log of recent chat threads, detected conversational acts, and
+                resolution status</p>
+            </div>
+            <div class="table-actions">
+              <div class="search-box">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="session-search-input" placeholder="Filter by thread, topic, or speaker..."
+                  oninput="filterSessionsTable()">
+              </div>
+              <div class="dropdown-pill-sm">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="4" y1="6" x2="20" y2="6"></line>
+                  <line x1="4" y1="12" x2="14" y2="12"></line>
+                  <line x1="4" y1="18" x2="8" y2="18"></line>
+                </svg>
+                <span>Sort by Date</span>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="boltshift-table" id="sessions-table">
+              <thead>
+                <tr>
+                  <th style="width: 40px;"><input type="checkbox" id="select-all-sessions"></th>
+                  <th>Thread Topic</th>
+                  <th>Thread ID</th>
+                  <th>Timestamp</th>
+                  <th>Participants</th>
+                  <th>Channel / Scope</th>
+                  <th>Status</th>
+                  <th>Turns</th>
+                  <th>Health</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="sessions-tbody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SCREEN 3: ANALYZE DIALOGUE FLOW ================= -->
+      <section id="screen-analyzer" class="screen-view">
+        <div class="analyzer-header">
+          <div>
+            <h1 class="dash-title">Transcript Inspector</h1>
+            <p class="dash-subtitle">Analyze multi-party dialogues to evaluate flow, intent acts, and friction points
+            </p>
+          </div>
+          <div class="sample-pill-group">
+            <span class="sample-group-label">Quick Presets:</span>
+            <button class="btn-sample-pill active" onclick="loadSampleAndAnalyze(1)">Package 404 (Confusion
+              Loop)</button>
+            <button class="btn-sample-pill" onclick="loadSampleAndAnalyze(2)">Routing Setup (Resolved)</button>
+            <button class="btn-sample-pill" onclick="loadSampleAndAnalyze(3)">GRUB Boot (Ignored Q)</button>
+            <button class="btn-sample-pill" onclick="loadSampleAndAnalyze('incident')">Sev-1 Incident (Tension)</button>
+          </div>
+        </div>
+
+        <!-- Analyzer Input & Controls -->
+        <div class="analyzer-main-grid">
+          <div class="input-panel-card">
+            <div class="card-top-bar">
+              <div class="panel-tag-wrap">
+                <span class="panel-number-badge">1</span>
+                <h3 class="card-title">Transcript Stream</h3>
+              </div>
+              <span class="format-hint">Supports <code>Speaker: Message</code> or <code>__eot__</code></span>
+            </div>
+
+            <div class="textarea-wrap">
+              <textarea id="dialogue-input" rows="11" placeholder="Paste conversation transcript...
+Example:
+alex: Can anyone review PR 102?
+jordan: I'm currently handling the production deployment.
+alex: Could you take a quick look after deployment?
+jordan: What is PR 102 again?
+alex: What do you mean what is it?
+jordan: I don't see your changes on main branch!"></textarea>
+            </div>
+
+            <div class="panel-footer-actions">
+              <div class="actions-left">
+                <button class="btn btn-outline" onclick="clearInput()">Clear</button>
+                <button class="btn btn-outline" onclick="loadRandomSample()">Random Preset</button>
+              </div>
+              <button class="btn btn-primary" id="btn-run-analysis" onclick="runAnalysis()">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                Run Analysis
+              </button>
+            </div>
+          </div>
+
+          <!-- Live Summary Metrics & Friction Highlights -->
+          <div class="output-overview-card">
+            <div class="card-top-bar">
+              <div class="panel-tag-wrap">
+                <span class="panel-number-badge">2</span>
+                <h3 class="card-title">Diagnostic Summary</h3>
+              </div>
+              <span class="engine-badge">State Machine & Tone Scorer</span>
+            </div>
+
+            <!-- Top 3 Metric Summary Boxes -->
+            <div class="summary-metric-boxes" id="summary-metrics-container">
+              <div class="sum-box sum-blue">
+                <div class="sum-label">Total Turns</div>
+                <div class="sum-val" id="res-total-turns">--</div>
+              </div>
+              <div class="sum-box sum-purple">
+                <div class="sum-label">Questions Logged</div>
+                <div class="sum-val" id="res-total-questions">--</div>
+              </div>
+              <div class="sum-box sum-red" id="res-friction-box">
+                <div class="sum-label">Friction Markers</div>
+                <div class="sum-val" id="res-total-gaps">--</div>
+              </div>
+            </div>
+
+            <!-- Detected Gaps Badges & Cards -->
+            <div class="gaps-list-section">
+              <h4 class="sub-header-title">Flagged Bottlenecks & Breakdown Points</h4>
+              <div class="gaps-container" id="gaps-cards-container">
+                <div class="empty-state-notice">
+                  <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#94a3b8" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                  <span>Click <strong>"Run Analysis"</strong> to inspect the conversation transcript.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: Utterance-Level Intent & Affective Trace (Visual Timeline & Data Table) -->
+        <div class="results-trace-card">
+          <div class="card-top-bar">
+            <div class="panel-tag-wrap">
+              <span class="panel-number-badge">3</span>
+              <h3 class="card-title">Turn-by-Turn Breakdown</h3>
+            </div>
+            <div class="trace-view-toggle">
+              <button class="view-btn active" id="btn-view-table" onclick="switchTraceView('table')">Table
+                Trace</button>
+              <button class="view-btn" id="btn-view-chat" onclick="switchTraceView('chat')">Chat Flow</button>
+            </div>
+          </div>
+
+          <!-- Trace Table View -->
+          <div id="trace-table-view" class="trace-view-container active">
+            <div class="table-responsive">
+              <table class="boltshift-table trace-table">
+                <thead>
+                  <tr>
+                    <th style="width: 70px;">Turn #</th>
+                    <th style="width: 130px;">Speaker</th>
+                    <th style="width: 170px;">Dialogue Act / Intent</th>
+                    <th style="width: 180px;">Affective Tone (VADER)</th>
+                    <th>Utterance Content</th>
+                  </tr>
+                </thead>
+                <tbody id="trace-tbody">
+                  <tr>
+                    <td colspan="5" class="table-empty-row">No dialogue analyzed yet. Run analysis above.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Trace Visual Chat Bubbles View -->
+          <div id="trace-chat-view" class="trace-view-container">
+            <div class="chat-bubbles-stream" id="chat-stream-container">
+              <!-- Rendered as interactive chat stream -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast-popup"></div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

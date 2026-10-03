@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CodeMix India 55k Schema",
+  "type": "object",
+  "properties": {
+    "id": { "type": "integer" },
+    "text": { "type": "string" },
+    "source_platform": { "type": "string" },
+    "domain": { "type": "string" },
+    "script_type": { "type": "string" },
+    "primary_language": { "type": "string" },
+    "code_mixing_index": { "type": "number", "minimum": 0, "maximum": 50 },
+    "hindi_word_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+    "english_word_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+    "word_count": { "type": "integer" },
+    "char_count": { "type": "integer" },
+    "sentiment_label": { "type": "string", "enum": ["Positive", "Negative", "Neutral"] },
+    "sentiment_confidence": { "type": "number" },
+    "emotion_label": { "type": "string" },
+    "intent_label": { "type": "string" },
+    "sarcasm_flag": { "type": "string", "enum": ["yes", "no"] },
+    "offensive_flag": { "type": "string", "enum": ["none", "mild", "high"] },
+    "annotator_agreement": { "type": "number" },
+    "region_context": { "type": "string" },
+    "split": { "type": "string", "enum": ["train", "val", "test"] }
+  },
+  "required": ["id", "text", "domain", "sentiment_label", "code_mixing_index"]
+}
