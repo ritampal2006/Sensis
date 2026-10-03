@@ -31,6 +31,27 @@ For each message, it tries to identify:
 The final result is shown as a conversation trace so that a user can see exactly where a problem was detected.
 
 ---
+## Project Structure
+sensis/
+│
+├── frontend/
+│   ├── components/
+│   ├── pages/
+│   ├── styles/
+│   └── utils/
+│
+├── analyzer/
+│   ├── parser/
+│   ├── intent/
+│   ├── sentiment/
+│   ├── state_machine/
+│   └── gap_detection/
+│
+├── data/
+│   └── sample_transcripts/
+│
+├── public/
+│
 
 ## System Architecture
 
@@ -100,25 +121,5 @@ The final result is shown as a conversation trace so that a user can see exactly
                  │ • Turn-by-Turn Trace    │
                  │ • Audit Logs            │
                  └─────────────────────────┘
-## Project Structure
-sensis/
-│
-├── frontend/
-│   ├── components/
-│   ├── pages/
-│   ├── styles/
-│   └── utils/
-│
-├── analyzer/
-│   ├── parser/
-│   ├── intent/
-│   ├── sentiment/
-│   ├── state_machine/
-│   └── gap_detection/
-│
-├── data/
-│   └── sample_transcripts/
-│
-├── public/
-│
+
 └── README.md
